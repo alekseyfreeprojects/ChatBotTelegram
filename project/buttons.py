@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-_button_start_quiz = KeyboardButton('Начать викторину')
+_button_start_quiz = KeyboardButton('Введите "Начать викторину", "Да" или "go" ')
 start_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(_button_start_quiz)
 
 _button_result = KeyboardButton('Показать результат')
