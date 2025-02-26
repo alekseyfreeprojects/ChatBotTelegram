@@ -1,30 +1,31 @@
 from aiogram import Dispatcher
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message
-
 from project.services import crud
 
+# Это файл обработчиков
 
+# Добро пожаловать
 async def welcome(message: Message) -> None:
     await crud.add_gamer(message)
 
-
+# Начать викторину
 async def start_quiz(message: Message) -> None:
     await crud.get_question(message.from_user.id, message)
 
-
+# Показать результаты
 async def show_result(message: Message) -> None:
     await crud.get_result(message.from_user.id, message)
 
-
+# Показать записи таблицы
 async def show_table_records(message: Message) -> None:
     await crud.get_table_records(message)
 
-
+# Новая игра
 async def new_game(message: Message) -> None:
     await crud.reset_result(message.from_user.id, message)
 
-
+#
 async def right_answer(message: Message) -> None:
     await crud.add_point(message.from_user.id, message)
 

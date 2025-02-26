@@ -1,11 +1,10 @@
 from aiogram import Dispatcher
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types import Message
-
 from project.database import db
 from project.services import questions
 
-
+# Фильтр проверки правильного ответа в вопросах викторины
 class RightAnswerFilter(BoundFilter):
     key = 'right_answer'
 
@@ -16,7 +15,7 @@ class RightAnswerFilter(BoundFilter):
         index_question: int = db.get_index_question(message.from_user.id)
         return message.text == questions.get_right_answer(index_question)
 
-
+# Фильтр опций режима самого робота
 class InAnswerOptionsFilter(BoundFilter):
     key = 'in_answer_options'
 

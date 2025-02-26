@@ -3,6 +3,7 @@ from sqlite3 import Cursor
 
 
 class Database:
+    # Создает базу данных и в ней создаются таблица пользователей с полями номера вопроса на котором остановился пользователь или счётом
     def __init__(self, db_file: str) -> None:
         with sql.connect(db_file) as self.database:
             self.cursor: Cursor = self.database.cursor()
@@ -17,6 +18,7 @@ class Database:
                 """
             )
 
+    # Создать или обновить пользователя
     def create_or_update_user(self, user_id: int, user_name: str) -> None:
         with self.database:
             self.cursor.execute(
@@ -28,6 +30,7 @@ class Database:
                 (user_id, user_name, user_name,)
             )
 
+    # Номер отвечаемого вопроса пользователя
     def get_index_question(self, user_id: int) -> int:
         with self.database:
             self.cursor.execute(
@@ -42,6 +45,7 @@ class Database:
             index_question: int = self.cursor.fetchone()[0]
             return index_question
 
+    # Обновить индекс вопроса
     def update_index_question(self, user_id: int) -> None:
         with self.database:
             self.cursor.execute(
@@ -53,6 +57,7 @@ class Database:
                 (user_id,)
             )
 
+    # Сбросить индекс вопроса
     def reset_index_question(self, user_id: int) -> None:
         with self.database:
             self.cursor.execute(
@@ -64,6 +69,7 @@ class Database:
                 (0, user_id,)
             )
 
+    # Получить количество баллов которые набрал пользователь
     def get_score(self, user_id: int) -> int:
         with self.database:
             self.cursor.execute(
@@ -78,6 +84,7 @@ class Database:
             score: int = self.cursor.fetchone()[0]
             return score
 
+    # Обновить счёт
     def update_score(self, user_id: int) -> None:
         with self.database:
             self.cursor.execute(
@@ -89,6 +96,7 @@ class Database:
                 (user_id,)
             )
 
+    # Сбросить счёт
     def reset_user_score(self, user_id: int) -> None:
         with self.database:
             self.cursor.execute(
@@ -100,6 +108,7 @@ class Database:
                 (0, user_id,)
             )
 
+    # Получить топ пользователей с наивысшими результатами
     def get_top_10_users_results(self) -> list[tuple]:
         with self.database:
             self.cursor.execute(

@@ -5,12 +5,14 @@ from project.database import db
 from project.questions import questions_and_answers
 from project.services import questions
 
-
+# Добавляет Имя и идентификатор игрока в БД
 async def add_gamer(message: Message) -> None:
+    # Добавляет в БД игрока
     db.create_or_update_user(message.from_user.id, message.from_user.full_name)
+    # Выдает сообщение о готовности отвечать
     await message.answer('Привет! Готов проверить знания?', reply_markup=buttons.start_menu)
 
-
+# Получает вопрос
 async def get_question(user_id: int, message: Message) -> Message:
     index_question: int = db.get_index_question(user_id)
     text_question, answer_options_keyboard = questions.generate_question(index_question)
@@ -22,7 +24,7 @@ async def get_result(user_id: int, message: Message) -> Message:
     answer_text: str = f'Правильно {db.get_score(user_id)} из {len(questions_and_answers)}'
     return await message.answer(answer_text, reply_markup=buttons.end_menu)
 
-
+# Выводит таблицу записей
 async def get_table_records(message: Message) -> Message:
     top_10_users_results: list[tuple] = db.get_top_10_users_results()
 
@@ -35,12 +37,13 @@ async def get_table_records(message: Message) -> Message:
     return await message.answer(table_records, reply_markup=buttons.end_menu)
 
 
+# Сбрасывает результаты
 async def reset_result(user_id: int, message: Message) -> Message:
     db.reset_user_score(user_id)
     db.reset_index_question(user_id)
     return await message.answer('Счет обнулён. Желаете сыграть еще раз?', reply_markup=buttons.start_menu)
 
-
+# Следующий вопрос
 async def next_question(user_id: int, message: Message) -> Message:
     index_question: int = db.get_index_question(user_id)
     if questions.next_index_out_of_range(index_question):
@@ -50,11 +53,11 @@ async def next_question(user_id: int, message: Message) -> Message:
 
     return await get_question(user_id, message)
 
-
+# Обновить счёт
 async def add_point(user_id: int, message: Message) -> Message:
     db.update_score(user_id)
     return await next_question(user_id, message)
 
-
+# Конец викторины
 async def end_quiz(message: Message) -> Message:
     return await message.answer('Вы прошли викторину!', reply_markup=buttons.end_menu)
